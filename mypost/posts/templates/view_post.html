@@ -1,0 +1,107 @@
+{% extends "index.html" %}
+{% block content %}
+	<div id="section">
+		{% if post %}
+
+			      <br/> <p><h3><u>{{ post.title }} :</u></h3></p>
+			      <br/> <p> {{ post.body }}</p>
+
+
+			{% else %}
+   			 <p>Post yok.</p>
+		{% endif %}
+<br/>
+    <form action="{% url 'view_post' post.id %}" method="post">
+
+ <input type="hidden" value="{{ post.id }}" name="post_id"/> 
+  <div class="form-group">
+  <label for="comment"><h3>Comment:</h3></label>
+  <textarea class="form-control" rows="5" name="yorum"></textarea>
+	</div>
+
+    <input type="submit" value="Yorum Ekle" class="button btn btn-success btn-lg btn-block" />
+    </form>
+    <br/>
+	<p> <h3>Yorumlar: </h3> 
+  {% for co in post.comment.all %} 
+  <p><i>{{ co.body }}</i> 
+    {% load i18n %}
+    {% language 'tr' %}
+    {% get_current_language as tr %}
+    <span class="sp"> {{ co.pub_date}} </span> </p>
+    {% endlanguage %}
+   <div id="yorum">
+    
+    <button class="btn btn-primary" type="button" onClick="onClick()" >Beğen <span class="badge" id="clicks">0</span> </button>    
+    <button id="bt" type="submit" class="btn btn-info">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Yanıtla</button>
+    
+    <form action="" method="post">
+    <input type="hidden" value="{{ co.id }}" name="comment_id"/> <br/>
+    <input id="in" style="display: none" type="text" name="yanit" placeholder="Cevap Verin..."/> 
+    <input id="inp" style="display: none" type="submit" value="Gönder" class="button btn btn-success" />
+    </form>
+     
+    </div>
+    {% for cv in co.cevap.all  %} 
+    <div class="yorm">
+    <p><i>{{ cv.body }}</i> 
+    {% load i18n %}
+    {% language 'tr' %}
+    {% get_current_language as tr %}
+    <span class="sp"> {{ cv.pub_date}} </span> </p>
+    {% endlanguage %}
+    
+    
+    <button class="btn btn-primary" type="button" onClick="onClick()" >Beğen <span class="badge" id="clicks">0</span> </button>    
+    <button id="bt" type="submit" class="btn btn-info">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Yanıtla</button>
+    
+    <form action="" method="post">
+    <input type="hidden" value="{{ co.id }}" name="comment_id"/> <br/>
+    <input id="in" style="display: none" type="text" name="yanit" placeholder="Cevap Verin..."/> 
+    <input id="inp" style="display: none" type="submit" value="Gönder" class="button btn btn-success" />
+    </form>
+     
+    </div>
+    {% endfor %}
+    <br/><br/>
+        {% endfor %}</p> 
+        <script type="text/javascript">
+$( "#bt" ).click(function() {
+  $( "#in" ).toggle( "slow" );
+    $( "#inp" ).toggle( "slow" );
+    $("#bt").hide();
+
+});
+   
+    var clicks = 0;
+    function onClick() {
+        clicks += 1;
+        document.getElementById("clicks").innerHTML = clicks;
+    };
+   
+
+
+
+</script>
+
+      
+
+
+
+			<input type="hidden" value="{{message}}" id="message">
+	</div>
+
+{% endblock %}
+{% block site_js %}
+  <script type="text/javascript">
+  if (message)
+  {
+  var l = Alertify.log;
+  l.success($("#message").val()).set({ delay: 10000 });
+
+
+  }
+  </script>
+  {% endblock %}

@@ -1,0 +1,9 @@
+{% load i18n %}{% load url from future %}{% blocktrans %}Sayın {{ username }},{% endblocktrans %}
+
+{% blocktrans with domain=site.domain %}Şifrenizi unuttuğunuzu tarafımıza başarıyla iletmiş bulunmaktasınız. IP: {{ domain }}.{% endblocktrans %}
+
+{% trans "Aşağıda bulunan linki kullanarak şifrenizi yeniden oluşturabilirsiniz:" %}
+
+http{% if secure %}s{% endif %}://{{ site.domain }}{% url "password_reset_reset" token %}
+
+{% trans "Eğer böyle bir isteğiniz yoksa lütfen bu mesajı dikkate almayınız." %}

@@ -1,0 +1,340 @@
+<html>
+    <head>
+    <link rel="stylesheet" type="text/css" href="/media/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/media/js/alertify/dist/themes/alertify.css" />
+    <link rel="stylesheet" href="/media/js/alertify/dist/themes/alertify.default.css" />
+        {% block title %} <title>SERCAN</title>   {% endblock title %}
+        {% block style %}
+<style>
+.a {
+    font-size: 23px;
+    color : blue;
+}
+p {
+    font-size: 20px;
+    padding-left: 30px;
+}
+.title {
+    font-size: 45px;
+    padding-left: 30px;
+    font-family: Georgia;
+}
+#nav {
+    line-height:90px;
+    background-color:#eeeeee;
+    height:640px;
+    width:636px;
+    float:right;
+    padding:5px;          
+}
+#section {
+    width:1000px;
+    float:left;
+    padding:10px;        
+}
+#footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;         
+}
+
+#link {
+    color: white;
+}
+
+#yorum {
+    padding-left: 35px;
+}
+
+.sp {
+    font-size: 13px;
+}
+
+#bdy{
+    padding-left: 60px;
+}
+
+.yorm{
+    padding-left: 120px;
+}
+#cikis{
+    font-size: 16px;
+}
+#user{
+text-align: right;  
+padding-top: 22px;
+color: gray;
+    }
+
+.form-group{
+    text-align: right;
+}
+
+#sifre{
+    padding-left: 401px;
+}
+</style>
+
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    {% endblock %}
+    </head>
+    
+{% block header %}
+<div class="center-block header"> 
+    <div id="mycarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="item active">
+
+                <img src="/media/bck.jpg"  width="1950" >
+                  <p class="a" align="center">SercanUzumcu.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header btn btn-lg">
+      <button type="button" class="navbar-toggle collapsed btn btn-lg" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{%url 'index' %}">Ana Sayfa</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav btn btn-lg">
+        <li class=""><a href="{%url 'view_hakkimda' %}">Hakkımda</a></li>
+        <li><a href="{%url 'index' %}">Posts</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle btn btn-lg" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategoriler <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{%url 'view_category' 1 %}">Yaşam</a></li>
+            <li><a href="{%url 'view_category' 2 %}">Doğa</a></li>
+            <li><a href="#">Video</a></li>
+          </ul>
+        </li>
+      </ul>
+   
+    {% if request.user.is_authenticated %}
+        <p id="user"> Hoşgeldin {{ user.username }} <a id="logout" href="#"><span id="logout">(Çıkış Yap)</span></a> </p>
+    {% else %}
+    <nav class="navbar-form navbar-right">                   
+                 <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Kullanıcı Adı">
+                    </div>
+                    <div class="form-group">
+                    <input type="password" name="password" id="password" class="form-control"  placeholder="Şifre">
+                    </div>
+                    <button class="btn btn-success" id="loginbutton" >Giriş Yap</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Kaydol</button>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Kaydol</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="İsim" tabindex="1">
+                        </div>
+                    </div>
+                     <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Soyisim" tabindex="1">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="user_name" id="user_name" class="form-control input-lg" placeholder="Kullanıcı Adı" tabindex="1">
+                        </div>
+                    </div>
+                     <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" tabindex="1">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="pass_word" id="pass_word" class="form-control input-lg" placeholder="Şifre" tabindex="1">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="pass_word2" id="pass_word2" class="form-control input-lg" placeholder="Şifre(Tekrar)" tabindex="1">
+                        </div>
+                    </div>
+
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="kaydetbutton">Kaydet</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+                   <p id="sifre"> <a href="{% url 'password_reset_recover' %}">(Şifremi Unuttum)</a></p>       
+
+
+    </nav>
+                
+                 
+                    {% endif %}
+
+    </div><!-- /.navbar-collapse -->
+ 
+  </div>
+</nav>
+            
+             
+{% endblock %}
+{% block content %}
+    <div id="section">
+
+        {% if posts %}
+            {% for p in posts%}
+                 <p class="title"><u><a href="{{ p.id }}/">{{ p.title }}</a></u></p>
+                  {% load i18n %}
+                    {% language 'tr' %}
+                    {% get_current_language as tr %}
+                     <i><p> Tarih: {{ p.pub_date}}</p></i>
+                  {% endlanguage %}
+                  <br/> <p> {{ p.body|truncatewords:40 }} <a href="{{ p.id }}/">Devamı...></a></p>
+                  <p> Kategori: {% for c in p.category.all %} <a href="{{c.id}}/category/"> {{c.title}} </a> {% endfor %}</p>
+                  <p><a href="{{ p.id }}/edit">Düzenle</a></p>
+            {% endfor %}
+
+
+            {% else %}
+             <p>Post yok.</p>
+        {% endif %}
+
+    </div>
+{% endblock %}
+{% block right %}
+
+    <div id="nav">
+              <form action="{% url 'index' %}" class="navbar-form navbar-center" role="search" method="get">
+      {{ crsf_token  }}
+        <div class="form-group" id="srch">
+          <input type="text" class="form-control" id="searchbutton" placeholder="Ara" name="q">
+        </div>
+        <button type="submit" class="btn btn-info">Ara</button>
+      </form>
+
+        <p class="title"><u>Son Yazılanlar</u></p>
+        <ol>
+        {%for p in son_yazilanlar %}
+        <li><h3><a href="{%url 'view_post' p.id %}">{{p.title}}</a></h3></li>
+        {% endfor %}
+        </ol>
+        
+    </div>
+{% endblock %}
+    <br/>
+    <div id="footer"> <p>©2015 SercanUzumcu.com </p>
+    <p>Tüm Hakları Saklıdır.</p>
+     </div>
+    </div>
+    {% block js %}
+    <script src="/media/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/media/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/media/js/alert.js"></script>
+    <script type="text/javascript" src="/media/js/alertify/dist/alertify.min.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+    $("#loginbutton").click(function(){ 
+    $.ajax({                                                                                                                           
+    type:"POST",                                                                                                                    
+    url: "{% url 'login' %}",        
+
+    data:   { 'username' : $('#username').val(),
+              'password' : $('#password').val() },   
+    dataType: "json",
+    success: function(response){ 
+        var l = Alertify.log;
+        console.log(response['result'])
+        if (response['result'] == true) {
+                    window.location.reload(true);
+
+        }
+        else {
+            
+            l.error(response['message']);
+        }
+        console.log("success"); },
+
+     error: function(request, textStatus, errorThrown){
+        console.log("hata");   }                                                                                                               
+        });
+    });
+
+    $("#logout").click(function(){ 
+        console.log("asdf");        
+    $.ajax({                                                                                                                           
+    type:"POST",                                                                                                                    
+    url: "{% url 'logout' %}",        
+
+    success: function(response){ 
+        window.location.reload(true);
+        console.log("success"); },
+     error: function(request, textStatus, errorThrown){
+        console.log("hata");   }                                                                                                               
+        });
+    });
+
+    $("#kaydetbutton").click(function(){ 
+    $.ajax({                                                                                                                           
+    type:"POST",                                                                                                                    
+    url: "{% url 'signup' %}",        
+    data:   { 'user_name' : $('#user_name').val(),
+              'pass_word' : $('#pass_word').val(),
+              'pass_word2' : $('#pass_word2').val(),
+              'email' : $('#email').val(),
+              'first_name' : $('#first_name').val(),
+              'last_name' : $('#last_name').val() },   
+    dataType: "json",
+    success: function(response){ 
+        var l = Alertify.log;
+        console.log(response['result'])
+        if (response['result'] == false) {
+            l.error(response['message']);
+        }
+        else {
+        window.location.reload(true);
+           
+        }
+        console.log("success"); },
+
+        
+     error: function(request, textStatus, errorThrown){
+        console.log("hata");   }                                                                                                               
+        });
+    });
+
+
+});
+    </script>
+    
+
+
+    {% endblock %}
+    {% block site_js %}
+    {% endblock %}
+    </body>
+</html>
