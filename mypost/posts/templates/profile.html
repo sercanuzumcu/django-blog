@@ -1,0 +1,103 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <div id="section" class="row">
+          <div class="col-md-4">
+            <img src="/media/{{userprofile.resim}}" class="img-thumbnail img-circle img-responsive " width="265" height="200" />
+      
+           </div>
+          <div class="col-md-8">
+        {% if user%}
+       <h2><u> <p>Profil Bilgileriniz</p></u></h2>
+       <p> <b> Kullanıcı Adı: </b>{{ user.username }}</p>
+        <p><b>  Adı: </b>{{ user.first_name }}</p>
+        <p><b> Soyadı:</b> {{ user.last_name }}</p>
+        <p> <b> Email: </b>{{ user.email }}</p>
+        {% load i18n %}
+        {% language 'tr' %}
+        {% get_current_language as tr %}
+        <p> <b> Son Giriş Tarihi: </b>{{ user.last_login }}</p>
+        <p> <b> Üyelik Tarihi: </b>{{ user.date_joined }}</p>
+        <!-- ARKADAŞLARI LİSTELEME ALANI -->
+        <p>  <b> Arkadaşları({{user.friend_set.count }}) : </b></p>
+        {% for f in user.friend_set.all %}
+          <p> <img src="/media/{{userprofile.resim}}" class="img-thumbnail img-circle img-responsive " width="60" height="60" /> 
+          {{ f.eklenen_arkadas.first_name }} {{ f.eklenen_arkadas.last_name }}
+         </p>
+        {% endfor %}
+        
+        {% endlanguage %}
+        <input type="hidden" value="{{ user_id }}" name="user_id"/>
+        {% endif %}
+
+
+            </div>
+
+    </div>
+
+{% endblock %}
+
+{% block right %}
+    <div id="nav"  class="row">
+    <h2><i><b>Arkadaş Ekleyin. Çevrenizi Genişletin</b></i></h2>
+    <div class="col-md-2">
+    <!-- ARKADAŞ EKLEME ALANI -->
+        {% for u in alluser %} 
+              {% if u != user %}
+
+  <img src="/media/{{userprofile.resim}}" class="img-thumbnail img-circle img-responsive " width="100" height="100" /><br/>
+              {% endif %}
+         {% endfor %}
+   </div>
+          <div class="col-md-10">
+    {% for u in alluser %} 
+     {% if u != user %}
+      <p>{{ u.first_name }} {{u.last_name}} 
+    
+      <button id="{{u.id}}" type="button" title="Ekle" class="addfriend glyphicon glyphicon-plus"></button>  </p>
+      {% endif %}
+    {% endfor %}
+
+        <input type="hidden" value="{{ csrf_token }}" name="crsftoken"/> <br/>
+       
+        </div>
+       <script type="text/javascript">
+
+    $(document).ready(function(){
+    $(".addfriend").on("click",function(){ 
+    console.log("burada");
+
+    $.ajax({                                                                                                                           
+    type:"POST",                                                                                                                    
+    url: "{% url 'addfriend' %}",        
+
+    data:   { 
+      'selected_friend' : $(this).attr("id"),
+      'csrf_token' : "{{csrf_token}}"
+            },   
+    dataType: "json",
+
+    success: function(response){ 
+             var l = Alertify.log;
+        console.log(response['result'])
+        if (response['result'] == true) {
+                    l.success(response["message"]);
+                    window.location.reload(true);
+
+        }
+        else {
+            
+            l.error(response['message']);
+        }
+        console.log("success"); },
+     error: function(){
+        console.log("hata");   
+                      } 
+    });
+  });
+});
+
+</script>
+    </div>
+{% endblock %}
+

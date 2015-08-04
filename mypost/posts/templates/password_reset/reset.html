@@ -4,13 +4,13 @@
 
 {% block content %}
     <div id="section">
-<p>Merhaba, <strong>{{ username }}</strong>. Lütfen yeni şifrenizi giriniz.</p>
-<form method="post" action="/pr/reset/Mw:1ZD6OW:Ewm7P1wUC8sCyOcxPgX3edwnOEU/">
-<input type="hidden" name="csrfmiddlewaretoken" value="zqEkasxxe4igElflNrGpklP8hoiflAfQ">
+<form method="post" action="{% url "password_reset_reset" token%}">
+<input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
 <p><label for="id_password1">Yeni Şifre:</label> <input id="id_password1" name="password1" type="password"></p>
 <p><label for="id_password2">Yeni Şifre(tekrar):</label> <input id="id_password2" name="password2" type="password"></p>
 <p><input type="submit" value="Güncelle" class="btn btn-success btn-lg"></p>
 </form>
     </div>
+
 {% endblock %}
 

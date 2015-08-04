@@ -1,107 +1,139 @@
-{% extends "index.html" %}
+  {% extends "index.html" %}
 {% block content %}
 	<div id="section">
 		{% if post %}
-
-			      <br/> <p><h3><u>{{ post.title }} :</u></h3></p>
-			      <br/> <p> {{ post.body }}</p>
-
-
-			{% else %}
+      <!-- DB'DEN POSTLARIN GÖSTERİLDİĞİ ALAN -->
+	     <br/> <p><h3><u>{{ post.title }} :</u></h3></p>
+       <br/> <p> {{ post.body }}</p>
+        {% if post.image %}
+          <img src="/media/{{post.image}}" align="middle" height="250" width="250" class="center-block img-thumbnail img-circle "/>
+        {% else %}
+              <p>Resim Yok</p>
+        {% endif %}
+		{% else %}
    			 <p>Post yok.</p>
 		{% endif %}
 <br/>
+    {% if request.user.is_authenticated %}
+    <!-- YORUM EKLEME FORMU -->
     <form action="{% url 'view_post' post.id %}" method="post">
-
  <input type="hidden" value="{{ post.id }}" name="post_id"/> 
-  <div class="form-group">
-  <label for="comment"><h3>Comment:</h3></label>
-  <textarea class="form-control" rows="5" name="yorum"></textarea>
+  <div>
+  <h3>Yorum Ekleyin:</h3>
+  <textarea class="form-control" rows="1" name="yorum"></textarea><br/>
 	</div>
 
     <input type="submit" value="Yorum Ekle" class="button btn btn-success btn-lg btn-block" />
     </form>
+    {% else %}
+    <p id="p_autcontrol">YORUM EKLEMEK İÇİN <a href="{% url 'index' %}">GİRİŞ</a> YAPMALISINIZ</p>
+    {% endif %}
     <br/>
+    <!-- YORUMLARIN GÖSTERİLDİĞİ ALAN -->
 	<p> <h3>Yorumlar: </h3> 
+
   {% for co in post.comment.all %} 
-  <p><i>{{ co.body }}</i> 
+
+  <p><b>{{ user.username }} </b>: <i>{{ co.body }}</i> 
     {% load i18n %}
     {% language 'tr' %}
     {% get_current_language as tr %}
-    <span class="sp"> {{ co.pub_date}} </span> </p>
+    <span class="pub_dates"> {{ co.pub_date}} </span> </p>
     {% endlanguage %}
-   <div id="yorum">
+   <div id="yorum_yap">
     
-    <button class="btn btn-primary" type="button" onClick="onClick()" >Beğen <span class="badge" id="clicks">0</span> </button>    
-    <button id="bt" type="submit" class="btn btn-info">
+    <button class="btnlike btn btn-primary" type="button"  >Beğen <span class="badge" id="{{co.id}}">{{co.like}}</span> </button>    
+    <button type="submit" class="btnyanitla btn btn-info" id="yanitla_{{co.id}}">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Yanıtla</button>
     
-    <form action="" method="post">
+    <form action="" id="form_{{co.id}}" method="post">
     <input type="hidden" value="{{ co.id }}" name="comment_id"/> <br/>
-    <input id="in" style="display: none" type="text" name="yanit" placeholder="Cevap Verin..."/> 
-    <input id="inp" style="display: none" type="submit" value="Gönder" class="button btn btn-success" />
+    <input class="main_input" style="display: none" type="text" name="yanit" placeholder="Cevap Verin..."/> 
+    <input style="display: none" type="submit" value="Gönder" class="btnsend btn btn-success"  />
     </form>
      
     </div>
+    <!-- YORUMA YORUM YAPILAN ALAN -->
     {% for cv in co.cevap.all  %} 
-    <div class="yorm">
+    <div class="yorum_goster">
     <p><i>{{ cv.body }}</i> 
     {% load i18n %}
     {% language 'tr' %}
     {% get_current_language as tr %}
-    <span class="sp"> {{ cv.pub_date}} </span> </p>
+    <span class="pub_dates"> {{ cv.pub_date}} </span> </p>
     {% endlanguage %}
+
     
-    
-    <button class="btn btn-primary" type="button" onClick="onClick()" >Beğen <span class="badge" id="clicks">0</span> </button>    
-    <button id="bt" type="submit" class="btn btn-info">
-    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Yanıtla</button>
+    <button class="btnlike btn btn-primary" type="button" >Beğen <span id="{{cv.id}}" class="badge">{{cv.like}}</span> </button>    
     
     <form action="" method="post">
     <input type="hidden" value="{{ co.id }}" name="comment_id"/> <br/>
-    <input id="in" style="display: none" type="text" name="yanit" placeholder="Cevap Verin..."/> 
-    <input id="inp" style="display: none" type="submit" value="Gönder" class="button btn btn-success" />
     </form>
      
     </div>
     {% endfor %}
     <br/><br/>
-        {% endfor %}</p> 
+    {% endfor %}</p> 
         <script type="text/javascript">
-$( "#bt" ).click(function() {
-  $( "#in" ).toggle( "slow" );
-    $( "#inp" ).toggle( "slow" );
-    $("#bt").hide();
+
+    $(document).ready(function(){
+    //YORUMA YORUM YAPARKEN GÖSTERİLEN TOGGLE JS
+    $(".btnyanitla").click(function(){ 
+      var str = this.id;
+      var id =  str.split('_')[1];
+      $myyanit= $("#yanitla_" + id);
+      $myform = $("#form_" + id);
+      $myform.find(".main_input").toggle( "slow" );
+      $myform.find(".btnsend").toggle( "slow" );
+      $myyanit.find(".btnyanitla").hide();
+
+    });
+
+    $(".btnlike").click(function(){ 
+      //TIKLANAN LIKE BTN'NİN ID'SINI DÖNME -AJAX
+    console.log("success");
+
+    $.ajax({                                                                                                                           
+    type:"POST",                                                                                                                    
+    url: "{% url 'like' %}",        
+
+    data:   { 'increment' : true,
+              'selected_like' : $(this).find("span").attr("id")
+
+    },   
+
+    success: function(response){ 
+              window.location.reload(true);
+              console.log("success"); 
+            },
+     error: function(request, textStatus, errorThrown){
+        console.log("hata");   } 
+   
+    
+    });
+  });
+   
 
 });
-   
-    var clicks = 0;
-    function onClick() {
-        clicks += 1;
-        document.getElementById("clicks").innerHTML = clicks;
-    };
-   
-
-
 
 </script>
 
-      
-
-
-
+      <input type="hidden" value="{{ user.id }}" name="user_id"/> 
 			<input type="hidden" value="{{message}}" id="message">
 	</div>
 
 {% endblock %}
 {% block site_js %}
   <script type="text/javascript">
+//DÖNEN MESAJI EKRANA DÖNEN JS
+  var delay = 1000;
+  setTimeout(function(){
   if (message)
-  {
-  var l = Alertify.log;
-  l.success($("#message").val()).set({ delay: 10000 });
-
-
-  }
+    {
+    var l = Alertify.log;
+    l.success($("#message").val());
+    }
+  }, delay);
+  
   </script>
   {% endblock %}

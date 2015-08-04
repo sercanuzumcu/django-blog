@@ -1,21 +1,20 @@
 {% extends "index.html" %}
 
-
-
 {% block content %}
 	<div id="section">
-		 <form action="{% url 'view_post' post.id %}" class="navbar-form navbar-right" role="search" method="post">
+
+		<form action="{% url 'view_post' post.id %}" class="navbar-form navbar-right" method="post">
       	{{ crsf_token  }}
-		<input class="form-control" type="text" value="{{post.title}}" name="title"><br/>
-		<textarea class="form-control" rows="10" cols="90" name="body"> {{post.body}} </textarea><br/>
-		<input type="submit" value="Kaydet" class="btn btn-success form-control pull-right" />
-  		
-		
+		Başlık: <input class="form-control" type="text" value="{{post.title}}" name="title"><br/>
+		Metin: <textarea class="form-control" rows="10" cols="90" name="body"> {{post.body}} </textarea><br/>
+		<input type="submit" value="Kaydet" class="btn btn-success form-control pull-right" />  		
+
 		<a class="btn btn-danger form-control pull-left" href="{% url 'index' %}">
-  		  <span class="glyphicon glyphicon-remove" aria-hidden="true"> Vazgeç</span></a>
+  		  <span class=" glyphicon glyphicon-remove" aria-hidden="true"> Vazgeç</span></a>
 		</button>	
 		 <input type="hidden" value="{{ post.id }}" name="post_id"/> 
-		 </form>
+		 <input type="hidden" value="{{ user.id }}" name="user_id"/> 
+		</form>
 	</div>
 {% endblock %}
 

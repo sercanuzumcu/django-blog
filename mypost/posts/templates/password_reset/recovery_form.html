@@ -5,7 +5,8 @@
 {% block content %}
     <div id="section">
         <form method="post" action="/pr/recover/">
-		<input type="hidden" name="csrfmiddlewaretoken" value="zqEkasxxe4igElflNrGpklP8hoiflAfQ">
+
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
 		<p><label for="id_username_or_email">Kullanıcı Adı veya Email:</label> <input id="id_username_or_email" name="username_or_email" type="text"></p>
 		<p><input type="submit" value="Gönder" class="btn btn-success btn-lg"></p>
 	</form>

@@ -23,15 +23,17 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^posts/', include('posts.urls')),
-
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
+        'document_root': settings.MEDIA_ROOT,
+    }),
     url(r'^pr/', include('password_reset.urls')),
     url(r'^hakkimda/$', views.view_hakkimda, name='view_hakkimda'),
     url(r'^login/$', views.login, name='login'),
-    url(r'^logout/$', views.logout, name='logout' ),
-    url(r'^signup/$', views.signup, name='signup' ),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^signup/$', views.signup, name='signup'),
+    url(r'^profile/$', views.profile, name='profile'),
+    url(r'^like/$', views.like, name='like'),
+    url(r'^addfriend/$', views.addfriend, name='addfriend'),
 
 
 ]

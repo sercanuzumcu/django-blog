@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'password_reset',
     'posts',
-    'mypost'
+    'mypost',
+    
 )
 
 MIDDLEWARE_CLASSES = (

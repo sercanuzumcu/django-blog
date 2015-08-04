@@ -6,7 +6,7 @@
         {% block title %} <title>SERCAN</title>   {% endblock title %}
         {% block style %}
 <style>
-.a {
+.sitename {
     font-size: 23px;
     color : blue;
 }
@@ -14,13 +14,13 @@ p {
     font-size: 20px;
     padding-left: 30px;
 }
-.title {
+.righttitle {
     font-size: 45px;
     padding-left: 30px;
     font-family: Georgia;
 }
 #nav {
-    line-height:90px;
+    line-height:66px;
     background-color:#eeeeee;
     height:640px;
     width:636px;
@@ -44,11 +44,11 @@ p {
     color: white;
 }
 
-#yorum {
+#yorum_yap {
     padding-left: 35px;
 }
 
-.sp {
+.pub_dates {
     font-size: 13px;
 }
 
@@ -56,24 +56,26 @@ p {
     padding-left: 60px;
 }
 
-.yorm{
+.yorum_goster{
     padding-left: 120px;
 }
 #cikis{
     font-size: 16px;
 }
 #user{
-text-align: right;  
-padding-top: 22px;
-color: gray;
+    padding-left: 1550px;
+    padding-top: 22px;
+    color: gray;
     }
 
 .form-group{
     text-align: right;
 }
-
 #sifre{
     padding-left: 401px;
+}
+#p_autcontrol{
+    text-align: center;
 }
 </style>
 
@@ -88,7 +90,7 @@ color: gray;
             <div class="item active">
 
                 <img src="/media/bck.jpg"  width="1950" >
-                  <p class="a" align="center">SercanUzumcu.com</p>
+                  <p class="sitename" align="center">SercanUzumcu.com</p>
                 </div>
             </div>
         </div>
@@ -97,7 +99,6 @@ color: gray;
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header btn btn-lg">
       <button type="button" class="navbar-toggle collapsed btn btn-lg" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
@@ -108,7 +109,6 @@ color: gray;
       <a class="navbar-brand" href="{%url 'index' %}">Ana Sayfa</a>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav btn btn-lg">
         <li class=""><a href="{%url 'view_hakkimda' %}">Hakkımda</a></li>
@@ -118,13 +118,16 @@ color: gray;
           <ul class="dropdown-menu">
             <li><a href="{%url 'view_category' 1 %}">Yaşam</a></li>
             <li><a href="{%url 'view_category' 2 %}">Doğa</a></li>
-            <li><a href="#">Video</a></li>
+            <li><a href="{%url 'view_category' 3 %}">Video</a></li>
           </ul>
         </li>
       </ul>
-   
+    <!-- Eğer kullanıcı Doğrulanmış ise, Hoşgeldin + username -->
     {% if request.user.is_authenticated %}
-        <p id="user"> Hoşgeldin {{ user.username }} <a id="logout" href="#"><span id="logout">(Çıkış Yap)</span></a> </p>
+        <p id="user"> Hoşgeldin {{ user.username }} 
+        <a id="profile" href="{% url 'profile' %}" title="Profil Görüntüle" class="glyphicon glyphicon-user"></a>
+        <a id="logout" href="#" class="glyphicon glyphicon-off" title="Çıkış Yap" ></a>  </p>
+
     {% else %}
     <nav class="navbar-form navbar-right">                   
                  <div class="form-group">
@@ -204,7 +207,7 @@ color: gray;
 {% endblock %}
 {% block content %}
     <div id="section">
-
+<!-- DB deki yazılan post'ların, for ile title ve body değerlerini ekrana dön -->
         {% if posts %}
             {% for p in posts%}
                  <p class="title"><u><a href="{{ p.id }}/">{{ p.title }}</a></u></p>
@@ -215,7 +218,7 @@ color: gray;
                   {% endlanguage %}
                   <br/> <p> {{ p.body|truncatewords:40 }} <a href="{{ p.id }}/">Devamı...></a></p>
                   <p> Kategori: {% for c in p.category.all %} <a href="{{c.id}}/category/"> {{c.title}} </a> {% endfor %}</p>
-                  <p><a href="{{ p.id }}/edit">Düzenle</a></p>
+                  <p><a href="{{ p.id }}/edit">Düzenle</a></p><br/>
             {% endfor %}
 
 
@@ -226,17 +229,17 @@ color: gray;
     </div>
 {% endblock %}
 {% block right %}
-
+<!-- SEARCH ALANI -->
     <div id="nav">
-              <form action="{% url 'index' %}" class="navbar-form navbar-center" role="search" method="get">
-      {{ crsf_token  }}
-        <div class="form-group" id="srch">
-          <input type="text" class="form-control" id="searchbutton" placeholder="Ara" name="q">
-        </div>
-        <button type="submit" class="btn btn-info">Ara</button>
-      </form>
+        <form action="{% url 'index' %}" class="navbar-form navbar-center" role="search" method="get">
+        {{ crsf_token  }}
+            <div class="form-group" id="srch">
+                 <input type="text" class="form-control" id="searchbutton" placeholder="Ara" name="q">
+            </div>
+         <button type="submit" class="btn btn-info">Ara</button>
+        </form>
 
-        <p class="title"><u>Son Yazılanlar</u></p>
+        <p class="righttitle"><u>Son Yazılanlar</u></p>
         <ol>
         {%for p in son_yazilanlar %}
         <li><h3><a href="{%url 'view_post' p.id %}">{{p.title}}</a></h3></li>
@@ -258,6 +261,16 @@ color: gray;
 
     <script type="text/javascript">
     $(document).ready(function(){
+      //LOGIN SIRASINDA ENTER TUŞU AKTİF EDİLDİ
+      $('#password').keypress(function(e){
+      if(e.keyCode==13)
+      $('#loginbutton').click();
+    });
+      $('#pass_word2').keypress(function(e){
+      if(e.keyCode==13)
+      $('#kaydetbutton').click();
+    });
+        //GİRİŞ YAP butonuna tıklandığında DATAları pasla, Dönen değerlere göre Mesajı ekrana alertify et
     $("#loginbutton").click(function(){ 
     $.ajax({                                                                                                                           
     type:"POST",                                                                                                                    
@@ -284,8 +297,9 @@ color: gray;
         });
     });
 
+
     $("#logout").click(function(){ 
-        console.log("asdf");        
+        console.log("logout");        
     $.ajax({                                                                                                                           
     type:"POST",                                                                                                                    
     url: "{% url 'logout' %}",        

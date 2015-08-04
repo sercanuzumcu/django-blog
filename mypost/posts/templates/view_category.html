@@ -5,15 +5,12 @@
 {% block content %}
     <div id="section">
         {% if category %}
-                  <br/> <p class="title"><u>{{ category.title }}</u></p>
-                             {% for p in category.blog_set.all %} 
-                                    <p>{{ p.title }} </p> 
-                                    <p>{{ p.body }} </p>
-                                  {% endfor %}
-
-
-
-            {% else %}
+            <br/> <p class="title"><u>{{ category.title }}</u></p>
+                {% for p in category.blog_set.all %} 
+                      <b><p>{{ p.title }} </p> </b>
+                      <p>{{ p.body }} </p>
+                {% endfor %}
+        {% else %}
              <p>Post yok.</p>
         {% endif %}
 
